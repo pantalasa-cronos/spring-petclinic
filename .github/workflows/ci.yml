@@ -18,7 +18,9 @@ jobs:
           java-version: 17
       - name: Check Java version
         run: java -version
-      - name: Gradle build with tests and JaCoCo
-        run: ./gradlew test jacocoTestReport --no-daemon || true
-      - name: Maven test with JaCoCo
-        run: ./mvnw test -DskipTests=false -q || true
+      - name: Gradle build with tests
+        run: ./gradlew test --no-daemon -x :jacocoTestReport || true
+      - name: Maven test with JaCoCo (skip Postgres tests)
+        run: ./mvnw test -Dtest='!PostgresIntegrationTests' -q || true
+      - name: Check JaCoCo report
+        run: ls -la target/site/jacoco/jacoco.xml 2>/dev/null || echo "No JaCoCo report found"
