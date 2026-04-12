@@ -1,27 +1,26 @@
 name: CI
 on:
-  push:
-    branches: ["**"]
-  pull_request:
-    branches: ["**"]
-
+    push:
+        branches: ["**"]
+    pull_request:
+        branches: ["**"]
 jobs:
-  build:
-    runs-on: cronos
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Set up Java 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 17
-      - name: Check Java version
-        run: java -version
-      - name: Gradle test
-        run: ./gradlew test --no-daemon || true
-      - name: Maven test with JaCoCo report
-        run: |
-          ./mvnw test jacoco:report -Dtest='!PostgresIntegrationTests' -q || true
-          echo "Checking for JaCoCo report..."
-          ls -la target/site/jacoco/jacoco.xml 2>/dev/null && echo "JaCoCo report exists!" || echo "No report"
+    build:
+        runs-on: localdev-e2e-test-1775980727-main
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+            - name: Set up Java 17
+              uses: actions/setup-java@v4
+              with:
+                distribution: temurin
+                java-version: 17
+            - name: Check Java version
+              run: java -version
+            - name: Gradle test
+              run: ./gradlew test --no-daemon || true
+            - name: Maven test with JaCoCo report
+              run: |
+                ./mvnw test jacoco:report -Dtest='!PostgresIntegrationTests' -q || true
+                echo "Checking for JaCoCo report..."
+                ls -la target/site/jacoco/jacoco.xml 2>/dev/null && echo "JaCoCo report exists!" || echo "No report"
