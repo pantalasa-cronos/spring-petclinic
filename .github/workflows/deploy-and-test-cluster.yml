@@ -12,7 +12,7 @@ on:
 
 jobs:
   deploy-and-test-cluster:
-    runs-on: lunar
+    runs-on: cronos
     steps:
       - name: Check out the repository
         uses: actions/checkout@v2

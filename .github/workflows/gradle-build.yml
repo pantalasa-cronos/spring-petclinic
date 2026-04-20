@@ -12,7 +12,7 @@ on:
 jobs:
   build:
 
-    runs-on: lunar
+    runs-on: cronos
     strategy:
       matrix:
         java: [ '17' ]
