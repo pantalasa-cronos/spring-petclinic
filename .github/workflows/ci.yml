@@ -15,5 +15,5 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-      - name: Maven test
-        run: ./mvnw -B test -Dtest='!PostgresIntegrationTests,!MySqlIntegrationTests' || true
+      - name: Gradle test
+        run: ./gradlew test --no-daemon || true
