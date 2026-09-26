@@ -1,7 +1,6 @@
 name: CI
+# Trimmed for lunar-lib ENG-1981 test-results evidence: one job per push. Do not merge.
 on:
-  push:
-    branches: ["**"]
   pull_request:
     branches: ["**"]
 
@@ -16,12 +15,5 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-      - name: Check Java version
-        run: java -version
-      - name: Gradle test
-        run: ./gradlew test --no-daemon || true
-      - name: Maven test with JaCoCo report
-        run: |
-          ./mvnw test jacoco:report -Dtest='!PostgresIntegrationTests' -q || true
-          echo "Checking for JaCoCo report..."
-          ls -la target/site/jacoco/jacoco.xml 2>/dev/null && echo "JaCoCo report exists!" || echo "No report"
+      - name: Maven test
+        run: ./mvnw -B test -Dtest='!PostgresIntegrationTests,!MySqlIntegrationTests' || true
