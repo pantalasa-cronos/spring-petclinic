@@ -1,27 +1,29 @@
 name: CI
+# Trimmed for lunar-lib ENG-1981 evidence: integration (Maven) fails one test,
+# then unit (Gradle) passes and finishes last. Do not merge.
 on:
-  push:
-    branches: ["**"]
   pull_request:
     branches: ["**"]
 
 jobs:
-  build:
+  integration:
     runs-on: cronos
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Set up Java 17
-        uses: actions/setup-java@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
-      - name: Check Java version
-        run: java -version
-      - name: Gradle test
+      - name: Maven tests
+        run: ./mvnw -B test -Dtest='!PostgresIntegrationTests,!MySqlIntegrationTests' || true
+  unit:
+    needs: integration
+    runs-on: cronos
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Gradle tests
         run: ./gradlew test --no-daemon || true
-      - name: Maven test with JaCoCo report
-        run: |
-          ./mvnw test jacoco:report -Dtest='!PostgresIntegrationTests' -q || true
-          echo "Checking for JaCoCo report..."
-          ls -la target/site/jacoco/jacoco.xml 2>/dev/null && echo "JaCoCo report exists!" || echo "No report"

@@ -60,6 +60,12 @@ dependencies {
 
 tasks.named('test') {
   useJUnitPlatform()
+  // ENG-1981 evidence branch: the Testcontainers suites need Docker; the evidence test runs in the Maven job only.
+  filter {
+    excludeTestsMatching '*.MySqlIntegrationTests'
+    excludeTestsMatching '*.PostgresIntegrationTests'
+    excludeTestsMatching '*.Eng1981EvidenceTests'
+  }
 }
 
 checkstyle {
