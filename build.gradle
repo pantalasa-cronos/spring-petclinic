@@ -60,11 +60,6 @@ dependencies {
 
 tasks.named('test') {
   useJUnitPlatform()
-  // ENG-1981 evidence branch: the Testcontainers suites need a Docker daemon.
-  filter {
-    excludeTestsMatching '*.MySqlIntegrationTests'
-    excludeTestsMatching '*.PostgresIntegrationTests'
-  }
 }
 
 checkstyle {
